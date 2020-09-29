@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-renameDialog',
+  selector: 'app-rename-dialog',
   templateUrl: './renameDialog.component.html',
   styleUrls: ['./renameDialog.component.css']
 })

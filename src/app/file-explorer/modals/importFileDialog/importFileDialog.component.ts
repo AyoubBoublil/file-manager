@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-importFileDialog',
+  selector: 'app-import-file-dialog',
   templateUrl: './importFileDialog.component.html',
   styleUrls: ['./importFileDialog.component.css']
 })
@@ -20,7 +20,7 @@ export class ImportFileDialogComponent implements OnInit {
   uploadFile(event) {
     for (let index = 0; index < event.length; index++) {
       const element = event[index];
-      this.files.push(element.name);
+      this.files.push(element);
     }
   }
 

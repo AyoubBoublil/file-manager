@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-newFolderDialog',
+  selector: 'app-new-folder-dialog',
   templateUrl: './newFolderDialog.component.html',
   styleUrls: ['./newFolderDialog.component.css']
 })

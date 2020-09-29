@@ -2,7 +2,7 @@
   <input #fileInput (change)="uploadFile($event.target.files)" hidden type="file">
 </div>
 <div *ngFor="let file of files;let i=index" class="files-list">
-  <p>{{ file }}</p>
+  <p>{{ file.name }}</p>
   <button (click)="deleteAttachment(i)" class="delete-file">
     <img src="../../assets/Recycle_Bin_Full.png">
   </button>
@@ -10,5 +10,5 @@
 
 <mat-dialog-actions style="margin-left: 300px">
   <button mat-raised-button mat-dialog-close>Cancel</button>
-  <button mat-raised-button [mat-dialog-close]="files" color="primary">OK</button>
+  <button mat-raised-button [mat-dialog-close]="files" color="primary">Upload</button>
 </mat-dialog-actions>

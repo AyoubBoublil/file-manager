@@ -1,7 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import { FileElement } from './file-explorer/model/element';
-import { Observable } from 'rxjs/Observable';
-import { FileService } from './service/file.service';
+import {FileElement} from './file-explorer/model/element';
+import {Observable} from 'rxjs/Observable';
+import {FileService} from './service/file.service';
+import {catchError, finalize, tap} from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -11,35 +12,107 @@ import { FileService } from './service/file.service';
 export class AppComponent implements OnInit {
   public fileElements: Observable<FileElement[]>;
 
-  constructor(public fileService: FileService) {}
-
+  fileInfos: Observable<any>;
   currentRoot: FileElement;
   currentPath: string;
   canNavigateUp = false;
 
+  constructor(public fileService: FileService) {
+  }
+
   ngOnInit() {
-/*    const folderA = this.fileService.add({ name: 'Folder A', isFolder: true, parent: 'root' });
-    this.fileService.add({ name: 'Folder B', isFolder: true, parent: 'root' });
-    this.fileService.add({ name: 'Folder C', isFolder: true, parent: folderA.id });
-    this.fileService.add({ name: 'File A', isFolder: false, parent: 'root' });
-    this.fileService.add({ name: 'File B', isFolder: false, parent: 'root' });*/
-
-    this.updateFileElementQuery();
+    this.refreshData();
   }
 
-  addFolder(folder: { name: string }) {
-    this.fileService.add({ isFolder: true, name: folder.name, parent: this.currentRoot ? this.currentRoot.id : 'root' });
-    this.updateFileElementQuery();
+  refreshData() {
+    this.fileService.getFiles().subscribe(files => {
+      for (const file of files) {
+        this.fileService.add(file);
+        this.updateFileElementQuery();
+      }
+    });
+
+    this.fileService.getFolders().subscribe(folders => {
+      for (const folder of folders) {
+        this.fileService.add(folder);
+        this.updateFileElementQuery();
+      }
+    });
   }
 
-  addFile(file: { name: string }) {
-    this.fileService.add({ isFolder: false, name: file.name, parent: this.currentRoot ? this.currentRoot.id : 'root' });
-    this.updateFileElementQuery();
+  addFolder(name: string, parent, isFolder) {
+
+    if (this.currentRoot !== undefined && this.currentPath) {
+      parent = this.currentRoot.id;
+    } else {
+      parent = 'root';
+    }
+
+    isFolder = true;
+
+    this.fileService.addFolder(name, parent, isFolder).pipe(
+      tap(res => {
+        // pass notice message to the login page
+      }),
+      catchError(err => {
+        return err;
+      }),
+      finalize(() => {
+        this.refreshData();
+      }),
+    ).subscribe();
+  }
+
+  addFile(file, parent, isFolder) {
+
+    if (this.currentRoot !== undefined && this.currentPath) {
+      parent = this.currentRoot.id;
+    } else {
+      parent = 'root';
+    }
+
+    isFolder = false;
+
+    this.fileService.addFile(file, parent, isFolder).pipe(
+      tap(res => {
+        // pass notice message to the login page
+
+      }),
+      catchError(err => {
+        return err;
+      }),
+      finalize(() => {
+        this.refreshData();
+      }),
+    ).subscribe();
   }
 
   removeElement(element: FileElement) {
-    this.fileService.delete(element.id);
-    this.updateFileElementQuery();
+    this.fileService.deleteElement(element.id, element.isFolder).pipe(
+      tap(res => {
+        console.log(res);
+      }),
+      catchError(err => {
+        return err;
+      }),
+      finalize(() => {
+        this.refreshData();
+      }),
+    ).subscribe();
+  }
+
+  moveElement(event: { element: FileElement; moveTo: FileElement }) {
+    this.fileService.moveToAnotherElement(event.element.id, event.moveTo.id, event.element.isFolder, {parent: event.moveTo.id}).pipe(
+      tap(res => {
+        console.log(res);
+      }),
+      catchError(err => {
+        return err;
+      }),
+      finalize(() => {
+        this.refreshData();
+      }),
+    ).subscribe();
   }
 
   navigateToFolder(element: FileElement) {
@@ -61,14 +134,18 @@ export class AppComponent implements OnInit {
     this.currentPath = this.popFromPath(this.currentPath);
   }
 
-  moveElement(event: { element: FileElement; moveTo: FileElement }) {
-    this.fileService.update(event.element.id, { parent: event.moveTo.id });
-    this.updateFileElementQuery();
-  }
-
   renameElement(element: FileElement) {
-    this.fileService.update(element.id, { name: element.name });
-    this.updateFileElementQuery();
+    this.fileService.renameElement(element.id, element.name, element.isFolder, {name: element.name}).pipe(
+      tap(res => {
+        // pass notice message to the login page
+        console.log(res);
+      }),
+      catchError(err => {
+        return err;
+      }),
+      finalize(() => {
+      }),
+    ).subscribe();
   }
 
   updateFileElementQuery() {
