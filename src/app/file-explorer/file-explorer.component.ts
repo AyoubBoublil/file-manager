@@ -99,4 +99,5 @@ export class FileExplorerComponent implements OnInit {
   downloadElement(element) {
     window.location.href = element.url;
   }
+
 }
