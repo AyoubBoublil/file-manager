@@ -87,8 +87,6 @@ export class FileExplorerComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(res => {
       if (res) {
-        // console.log(res[0]);
-        // this.fileAdded.emit(res[0]);
         for (const name of res) {
           this.fileAdded.emit(name);
         }

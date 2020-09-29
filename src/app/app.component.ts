@@ -90,7 +90,7 @@ export class AppComponent implements OnInit {
   removeElement(element: FileElement) {
     this.fileService.deleteElement(element.id, element.isFolder).pipe(
       tap(res => {
-        console.log(res);
+
       }),
       catchError(err => {
         return err;
@@ -104,7 +104,7 @@ export class AppComponent implements OnInit {
   moveElement(event: { element: FileElement; moveTo: FileElement }) {
     this.fileService.moveToAnotherElement(event.element.id, event.moveTo.id, event.element.isFolder, {parent: event.moveTo.id}).pipe(
       tap(res => {
-        console.log(res);
+
       }),
       catchError(err => {
         return err;
@@ -138,7 +138,7 @@ export class AppComponent implements OnInit {
     this.fileService.renameElement(element.id, element.name, element.isFolder, {name: element.name}).pipe(
       tap(res => {
         // pass notice message to the login page
-        console.log(res);
+
       }),
       catchError(err => {
         return err;
