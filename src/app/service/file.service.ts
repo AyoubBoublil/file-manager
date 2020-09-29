@@ -70,19 +70,8 @@ export class FileService {
   }
 
   add(fileElement: FileElement) {
-    // fileElement.id = v4();
     this.map.set(fileElement.id, this.clone(fileElement));
     return fileElement;
-  }
-
-  delete(id: string) {
-    this.map.delete(id);
-  }
-
-  update(id: string, update: Partial<FileElement>) {
-    let element = this.map.get(id);
-    element = Object.assign(element, update);
-    this.map.set(element.id, element);
   }
 
   queryInFolder(folderId: string) {
