@@ -29,7 +29,8 @@
         <div (click)="navigate(element)" (contextmenu)="openMenu($event, menuTrigger)" fxLayout="column"
              fxLayoutAlign="space-between center">
           <mat-icon *ngIf="element.isFolder" class="file-or-folder-icon pointer" color="primary">folder</mat-icon>
-          <mat-icon *ngIf="!element.isFolder" class="file-or-folder-icon pointer" color="primary">insert_drive_file
+          <mat-icon (click)="downloadElement(element)" *ngIf="!element.isFolder" class="file-or-folder-icon pointer"
+                    color="primary">insert_drive_file
           </mat-icon>
           <span *ngIf="element.isFolder" style="margin-left: 10px; margin-right: 10px">{{element.name}}</span>
           <span *ngIf="!element.isFolder" style="margin-left: 10px; margin-right: 10px"><a
